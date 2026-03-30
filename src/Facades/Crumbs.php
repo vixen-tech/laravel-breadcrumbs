@@ -7,7 +7,7 @@ use Vixen\Breadcrumbs\Breadcrumbs;
 /**
  * @method static Breadcrumbs add(string|array $title, ?string $path = null, mixed $params = null)
  * @method static \Illuminate\Support\Collection all()
- * @method static \Illuminate\View\View render(?string $view = null)
+ * @method static \Illuminate\Contracts\View\View render(?string $view = null)
  * @method static string toJson()
  * @method static array toArray()
  * @method static int count()

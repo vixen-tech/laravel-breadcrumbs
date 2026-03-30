@@ -62,15 +62,12 @@ class Breadcrumb
             return URL::current();
         }
 
-        // Determine whether the given URL is a route name
-        if (Route::has($path)) {
-            return tap(route($path, Arr::wrap($params)), function (string $path) {
-                $this->active = $path === URL::current();
-            });
-        }
+        $url = Route::has($path)
+            ? route($path, Arr::wrap($params))
+            : url($path);
 
-        return tap(url($path), function (string $path) {
-            $this->active = $path === URL::current();
-        });
+        $this->active = $url === URL::current();
+
+        return $url;
     }
 }
