@@ -6,13 +6,13 @@ if (!function_exists('crumbs')) {
     /**
      * A shorthand for calling Crumbs façade.
      */
-    function crumbs(string|array|\Closure|null $title = null, ?string $path = null, mixed $params = null): Breadcrumbs
+    function crumbs(string|array|\Closure|null $title = null, ?string $path = null): Breadcrumbs
     {
-        return tap(app(Breadcrumbs::class), function (Breadcrumbs $crumbs) use ($params, $path, $title) {
+        return tap(app(Breadcrumbs::class), function (Breadcrumbs $crumbs) use ($path, $title) {
             if ($title instanceof \Closure) {
                 $title($crumbs);
             } elseif (!is_null($title)) {
-                $crumbs->add($title, $path, $params);
+                $crumbs->add($title, $path);
             }
         });
     }

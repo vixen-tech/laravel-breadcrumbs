@@ -3,8 +3,6 @@
 namespace Vixen\Breadcrumbs;
 
 use Vixen\Breadcrumbs\Exceptions\InvalidBreadcrumbOptions;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
 class Breadcrumb
@@ -15,9 +13,9 @@ class Breadcrumb
     public readonly string $title;
 
     /**
-     * An absolute URL to the breadcrumb's item.
+     * A URL to the breadcrumb's item.
      */
-    public readonly string $path;
+    public readonly ?string $path;
 
     /**
      * Whether the breadcrumb is a current page.
@@ -26,48 +24,31 @@ class Breadcrumb
 
     public function __construct(
         string|array $title,
-        ?string $path,
-        mixed $params = null,
+        ?string $path = null,
     )
     {
         if (is_string($title)) {
             $this->title = $title;
-            $this->path = $this->parseUrl($path, $params);
+            $this->path = $path;
         } else {
             $this->parseOptions($title);
         }
+
+        $this->active = $this->path !== null && $this->path === URL::current();
     }
 
     /**
      * Convert breadcrumb options into a title and a URL.
+     *
+     * @throws InvalidBreadcrumbOptions
      */
     protected function parseOptions(array $options): void
     {
-        if (!isset($options['title']) || !isset($options['path'])) {
-            throw new InvalidBreadcrumbOptions('Parameter "$title" must either be a string or an array containing title and path keys.');
+        if (!isset($options['title'])) {
+            throw new InvalidBreadcrumbOptions('Parameter "$title" must either be a string or an array containing a title key.');
         }
 
         $this->title = $options['title'];
-        $this->path = $this->parseUrl($options['path'], $options['params'] ?? []);
-    }
-
-    /**
-     * Parse a path or a route name into an absolute URL.
-     */
-    protected function parseUrl(?string $path, mixed $params = null): string
-    {
-        if (!$path) {
-            $this->active = true;
-
-            return URL::current();
-        }
-
-        $url = Route::has($path)
-            ? route($path, Arr::wrap($params))
-            : url($path);
-
-        $this->active = $url === URL::current();
-
-        return $url;
+        $this->path = $options['path'] ?? null;
     }
 }

@@ -7,7 +7,7 @@ Laravel package that allows simple creation of breadcrumbs. Works perfectly with
 
 ```php
 public function show(Post $post) {
-    crumbs('Posts', '/posts')->add('Show Post #3', 'posts.show', 3);
+    crumbs('Posts', '/posts')->add("Show Post #{$post->id}", route('posts.show', $post));
 }
 ```
 
@@ -62,7 +62,7 @@ Route::get('posts', [PostController::class, 'index'])->crumbs(function (Breadcru
 });
 ```
 
-With this method you can get breadcrumbs declaration out of the way, however we don't have access to route parameters. That's a case where we can put breadcrumbs declaration in our controller.
+With this method you can get breadcrumbs declaration out of the way, however we don't have access to route model bindings. That's a case where we can put breadcrumbs declaration in our controller.
 
 > This route macro has the same signature as the `crumbs` helper function.
 
@@ -70,11 +70,11 @@ With this method you can get breadcrumbs declaration out of the way, however we 
 
 ```php
 public function show(Post $post) {
-    crumbs('Posts', '/posts')->add('Show Post #3', 'posts.show', [3]); // The third parameter can also be a primitive: `add(..., ..., 3)`
+    crumbs('Posts', '/posts')->add("Show Post #{$post->id}", route('posts.show', $post));
 }
 ```
 
-This way you can use route parameters to build your breadcrumbs, such as showing a resource's ID.
+This way you can use route model bindings to build your breadcrumbs, such as showing a resource's ID.
 
 ### Notations
 
@@ -86,7 +86,7 @@ There are are also three different ways of building a breadcrumbs list:
 use Vixen\Breadcrumbs\Breadcrumbs;
 
 public function show(Post $post, Breadcrumbs $crumbs) {
-    $crumbs->add('Show Post #3', 'posts.show', [3]);
+    $crumbs->add("Show Post #{$post->id}", route('posts.show', $post));
 }
 ```
 
@@ -96,7 +96,7 @@ or
 use Vixen\Breadcrumbs\Breadcrumbs;
 
 public function show(Post $post) {
-    Breadcrumbs::instance()->add('Show Post #3', 'posts.show', [3]);
+    Breadcrumbs::instance()->add("Show Post #{$post->id}", route('posts.show', $post));
 }
 ```
 
@@ -106,7 +106,7 @@ public function show(Post $post) {
 use Vixen\Breadcrumbs\Facades\Crumbs;
 
 public function show(Post $post) {
-    Crumbs::add('Show Post #3', 'posts.show', [3]);
+    Crumbs::add("Show Post #{$post->id}", route('posts.show', $post));
 }
 ```
 
@@ -116,7 +116,7 @@ This is the one we have used so far
 
 ```php
 public function show(Post $post) {
-    crumbs()->add('Show Post #3', 'posts.show', [3]);
+    crumbs()->add("Show Post #{$post->id}", route('posts.show', $post));
 }
 ```
 
@@ -182,22 +182,21 @@ A few things to note here:
 
 ## API
 
-### `Breadcrumbs::add(string|array $title, ?string $path = null, mixed $params = null)`
+### `Breadcrumbs::add(string|array $title, ?string $path = null)`
 
-A breadcrumb requires a title. 
+A breadcrumb requires a title.
 
-If `$path` is not provided, current URL will be used instead. `$path` can either be relative URL that will be converted to an absolute link or a route name. In case of a route name, you can also use the third parameter `$params`.
+`$path` is a plain string URL. If not provided, the breadcrumb will have no URL.
 
 `$title` accepts both a string and an array. If it's an array, it must contain these keys:
 ```php
 [
     'title' => '',
-    'path' => '',
-    'params' => [], // optional
+    'path' => '', // optional
 ]
 ```
 
-### `crumbs(string|array|callable|null $title = null, ?string $path = null, mixed $params = null)`
+### `crumbs(string|array|callable|null $title = null, ?string $path = null)`
 
 If you call this helper function without any parameter, it will simply return an instance of `Breadcrumbs` as mentioned above. Otherwise it accepts the same parameters as `Breadcrumbs::add()`.
 
@@ -207,9 +206,9 @@ Exclusively to this function, the `$title` parameter also accepts a closure (the
 use Vixen\Breadcrumbs\Breadcrumbs;
 
 public function show(Post $post) {
-    crumbs(function (Breadcrumbs $crumbs) {
-        $crumbs->add('All Posts', 'posts.index');
-        $crumbs->add('Show Post #1', 'posts.show', 1);
+    crumbs(function (Breadcrumbs $crumbs) use ($post) {
+        $crumbs->add('All Posts', route('posts.index'));
+        $crumbs->add("Show Post #{$post->id}", route('posts.show', $post));
     });
 }
 ```
