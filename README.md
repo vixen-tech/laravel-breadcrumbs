@@ -3,218 +3,118 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/vixen/laravel-breadcrumbs.svg?style=flat-square)](https://packagist.org/packages/vixen/laravel-breadcrumbs)
 [![Total Downloads](https://img.shields.io/packagist/dt/vixen/laravel-breadcrumbs.svg?style=flat-square)](https://packagist.org/packages/vixen/laravel-breadcrumbs)
 
-Laravel package that allows simple creation of breadcrumbs. Works perfectly with Blade and Inertia.js.
+A simple breadcrumbs package for Laravel, with support for Blade and Inertia.js.
 
 ```php
-public function show(Post $post) {
-    crumbs('Posts', '/posts')->add("Show Post #{$post->id}", route('posts.show', $post));
-}
+// In your controller
+crumbs('Posts', '/posts')->add('Show Post', route('posts.show', $post));
 ```
 
 ```html
-<section>
-    @crumbs
-</section>
-
-<main>Main Content</main>
+<!-- In your Blade view -->
+@crumbs
 ```
 
 ```tsx
-export function HomePage({ breadcrumbs }: { breadcrumbs: Breadcrumbs }) {
-    return (<div><Breadcrumbs breadcrumbs={breadcrumbs} /></div>)
-}
+// In your Inertia component
+<Breadcrumbs items={breadcrumbs} />
 ```
 
 ## Installation
-
-You can install the package by running this command in your console:
 
 ```shell
 composer require vixen/laravel-breadcrumbs
 ```
 
-The Service Provider will be automatically discovered.
-
-### Vendor Files
-
-You can publish both the configuration and view files with these commands:
+The service provider is auto-discovered. To publish the config and views:
 
 ```shell
 php artisan vendor:publish --tag="breadcrumbs-config"
-```
-```shell
 php artisan vendor:publish --tag="breadcrumbs-views"
 ```
 
-## Usage
+## Quick Start
 
-There are two different places to populate a breadcrumbs list:
-1. In your routes file, e.g. `web.php`.
-2. Directly in your route's action, e.g. closure or controller.
+Add breadcrumbs from your controller or routes file, then render them in your view.
 
-### Routes File
+### Adding Breadcrumbs
+
+From a controller:
 
 ```php
-use Vixen\Breadcrumbs\Breadcrumbs;
+public function show(Post $post)
+{
+    crumbs('Posts', '/posts')->add($post->title, route('posts.show', $post));
+}
+```
 
+From your routes file:
+
+```php
 Route::get('posts', [PostController::class, 'index'])->crumbs(function (Breadcrumbs $crumbs) {
-    $crumbs->add('Posts', '/posts'); // Here we are using a hard-coded URL
+    $crumbs->add('Posts', '/posts');
 });
 ```
 
-With this method you can get breadcrumbs declaration out of the way, however we don't have access to route model bindings. That's a case where we can put breadcrumbs declaration in our controller.
+### Rendering
 
-> This route macro has the same signature as the `crumbs` helper function.
+In Blade, use the `@crumbs` directive or call `render()` directly:
 
-### Controller
+```html
+@crumbs
 
-```php
-public function show(Post $post) {
-    crumbs('Posts', '/posts')->add("Show Post #{$post->id}", route('posts.show', $post));
-}
+{{-- or with a custom view --}}
+@crumbs(breadcrumbs::custom-view)
 ```
 
-This way you can use route model bindings to build your breadcrumbs, such as showing a resource's ID.
+For Inertia.js, the breadcrumbs are available as a JSON-serializable array via `crumbs()->toArray()` or `crumbs()->toJson()`.
+
+## Usage
 
 ### Notations
 
-There are are also three different ways of building a breadcrumbs list:
+There are three interchangeable ways to interact with breadcrumbs:
 
-#### Breadcrumbs Class
-
+**Helper function** (recommended):
 ```php
-use Vixen\Breadcrumbs\Breadcrumbs;
-
-public function show(Post $post, Breadcrumbs $crumbs) {
-    $crumbs->add("Show Post #{$post->id}", route('posts.show', $post));
-}
+crumbs('Home', '/')->add('About', '/about');
 ```
 
-or
-
-```php
-use Vixen\Breadcrumbs\Breadcrumbs;
-
-public function show(Post $post) {
-    Breadcrumbs::instance()->add("Show Post #{$post->id}", route('posts.show', $post));
-}
-```
-
-#### Crumbs Façade
-
+**Facade:**
 ```php
 use Vixen\Breadcrumbs\Facades\Crumbs;
 
-public function show(Post $post) {
-    Crumbs::add("Show Post #{$post->id}", route('posts.show', $post));
+Crumbs::add('Home', '/');
+```
+
+**Dependency injection:**
+```php
+use Vixen\Breadcrumbs\Breadcrumbs;
+
+public function index(Breadcrumbs $crumbs)
+{
+    $crumbs->add('Home', '/');
 }
 ```
 
-#### Helper Function
+### Options Array
 
-This is the one we have used so far
+Instead of separate arguments, you can pass an associative array:
 
 ```php
-public function show(Post $post) {
-    crumbs()->add("Show Post #{$post->id}", route('posts.show', $post));
-}
-```
-
-If no parameters are passed, the function will return an instance of the main `Breadcrumbs` class.
-
-### Rendering
-
-You can render the breadcrumbs list by calling `crumbs()->render()` inside a Blade view or using a custom directive:
-
-```html
-<section>
-    {{ crumbs()->render() }}
-</section>
-
-<!-- or -->
-
-<section>
-    @crumbs
-</section>
-```
-
-Both notations accept an optional parameter `$view`:
-- `crumbs()->render('breadcrumbs::custom-view')`
-- `@crumbs(breadcrumbs::custom-view)`
-
-You can either customize already existing views that come with the package by running:
-
-```shell
-php artisan vendor:publish --tag="breadcrumbs-views"
-```
-
-Or specify a custom view inside `config('breadcrumbs.view')`.
-
-#### View Customization
-
-Let's say we want to create a completely new view for our breadcrumbs. We start by creating a new Blade file inside `resources/views/vendor/breadcrumbs/custom-theme.blade.php` (I prefer to put even custom views inside the `vendor` folder, but feel free to put them anywhere you like as long as it's inside `resources/views` folder).
-
-Let's take a look the default view file (`resources/views/vendor/breadcrumbs/plain.blade.php`):
-
-```html
-<nav aria-label="Breadcrumb">
-    <ol role="list" style="display: flex; align-items: center; gap: 1rem">
-        @foreach ($breadcrumbs as $breadcrumb)
-            @if (!$loop->first)
-                <li>/</li>
-            @endif
-    
-            @if ($breadcrumb->active)
-                <li>{{ $breadcrumb->title }}</li>
-            @else
-                <a href="{{ $breadcrumb->path }}">
-                    {{ $breadcrumb->title }}
-                </a>
-            @endif
-        @endforeach
-    </ol>
-</nav>
-```
-
-A few things to note here:
-- `$breadcrumbs` is automatically passed to the view. This is the instance of `Breadcrumbs` class. You can also call `$breadcrumbs->all()` which is the same thing.
-- `$breadcrumb->active` is a computed property that simply returns `true` in case the breadcrumb's path is the same as current URL.
-
-## API
-
-### `Breadcrumbs::add(string|array $title, ?string $path = null, array $extra = [])`
-
-A breadcrumb requires a title.
-
-`$path` is a plain string URL. If not provided, the breadcrumb will have no URL.
-
-`$extra` is an associative array for any additional data you want to attach to the breadcrumb.
-
-`$title` accepts a string or an array. If it's an associative array, it represents a single breadcrumb:
-```php
-[
-    'title' => '',
-    'path' => '', // optional
-    'extra' => [], // optional
-]
-```
-
-If it's a sequential array, each element is treated as a separate breadcrumb grouped at a single position. This is useful for rendering a dropdown selector instead of a single link:
-```php
-Crumbs::add([
-    ['title' => 'Electronics', 'path' => '/categories/electronics'],
-    ['title' => 'Clothing', 'path' => '/categories/clothing'],
-    ['title' => 'Books', 'path' => '/categories/books'],
+crumbs([
+    'title' => 'Posts',
+    'path' => '/posts',
+    'extra' => ['icon' => 'newspaper'],
 ]);
 ```
 
-For example, an e-commerce site might show a category selector in the breadcrumb trail:
+### Multi-Item Positions
 
-```
-Home > [Electronics | Clothing | Books] > Product Name
-```
+A position in the trail can hold multiple items by passing a sequential array. This is useful for rendering a dropdown selector instead of a single link:
 
 ```php
+// Home > [Electronics | Clothing | Books] > Product Name
 crumbs('Home', '/')
     ->add([
         ['title' => 'Electronics', 'path' => '/categories/electronics'],
@@ -224,36 +124,74 @@ crumbs('Home', '/')
     ->add($product->name, route('products.show', $product));
 ```
 
-When iterating, a multi-item position will be an array of `Breadcrumb` objects instead of a single `Breadcrumb`. Each item independently tracks its own `active` state.
+When iterating, a multi-item position is an array of `Breadcrumb` objects rather than a single one. Each item independently tracks its own `active` state.
+
+### Custom Views
+
+Publish the views and edit them, or create your own. The default view (`breadcrumbs::plain`):
+
+```html
+<nav aria-label="Breadcrumb">
+    <ol role="list" style="display: flex; align-items: center; gap: 1rem">
+        @foreach ($breadcrumbs as $breadcrumb)
+            @if (!$loop->first)
+                <li>/</li>
+            @endif
+
+            @if ($breadcrumb->active)
+                <li>{{ $breadcrumb->title }}</li>
+            @else
+                <li>
+                    <a href="{{ $breadcrumb->path }}">
+                        {{ $breadcrumb->title }}
+                    </a>
+                </li>
+            @endif
+        @endforeach
+    </ol>
+</nav>
+```
+
+You can specify a different view globally in `config/breadcrumbs.php` or per-render:
+
+```php
+crumbs()->render('breadcrumbs::custom-view')
+```
+
+## API
+
+### `Breadcrumbs::add(string|array $title, ?string $path = null, array $extra = [])`
+
+| Parameter | Type            | Description                                                         |
+|-----------|-----------------|---------------------------------------------------------------------|
+| `$title`  | `string\|array` | The breadcrumb label, an options array, or a list of options arrays |
+| `$path`   | `?string`       | A URL string. `null` means no link.                                 |
+| `$extra`  | `array`         | Arbitrary extra data attached to the breadcrumb.                    |
+
+When `$title` is an associative array, it is treated as a single breadcrumb with keys `title`, `path` (optional), and `extra` (optional).
+
+When `$title` is a sequential array, each element is an options array and the items are grouped at a single position in the trail.
 
 ### `crumbs(string|array|callable|null $title = null, ?string $path = null, array $extra = [])`
 
-If you call this helper function without any parameter, it will simply return an instance of `Breadcrumbs` as mentioned above. Otherwise it accepts the same parameters as `Breadcrumbs::add()`.
+Same as `Breadcrumbs::add()`, but also accepts a callable and returns the `Breadcrumbs` instance. Called without arguments, it simply returns the instance.
 
-Exclusively to this function, the `$title` parameter also accepts a closure (the same goes for the `Route::crumbs()` macro as shown in the example above):
+### `Breadcrumb` Properties
 
-```php
-use Vixen\Breadcrumbs\Breadcrumbs;
-
-public function show(Post $post) {
-    crumbs(function (Breadcrumbs $crumbs) use ($post) {
-        $crumbs->add('All Posts', route('posts.index'));
-        $crumbs->add("Show Post #{$post->id}", route('posts.show', $post));
-    });
-}
-```
-
-### Breadcrumb Item
-
-A single breadcrumb item has `title`, `path`, `active` and `extra` properties.
+| Property | Type      | Description                                 |
+|----------|-----------|---------------------------------------------|
+| `title`  | `string`  | The breadcrumb label.                       |
+| `path`   | `?string` | The URL, or `null` if none was provided.    |
+| `active` | `bool`    | `true` when `path` matches the current URL. |
+| `extra`  | `array`   | Arbitrary extra data.                       |
 
 ## Changelog
 
-The [CHANGELOG](CHANGELOG.md) file will tell you about all changes to this package.
+See [CHANGELOG](CHANGELOG.md) for all changes.
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
@@ -262,4 +200,4 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE) for more information.
+MIT. See [LICENSE](LICENSE.md) for details.
