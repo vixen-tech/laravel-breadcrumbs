@@ -1,12 +1,13 @@
 {
     "name": "vixen/laravel-breadcrumbs",
-    "description": "Yet another breadcrumbs package for Laravel: simple and easy to use.",
+    "description": "A simple breadcrumbs package for Laravel, with support for Blade and Inertia.js.",
     "type": "library",
     "keywords": [
         "laravel",
         "breadcrumbs",
-        "crumbs",
-        "navigation"
+        "navigation",
+        "blade",
+        "inertia"
     ],
     "readme": "./README.md",
     "license": "MIT",
