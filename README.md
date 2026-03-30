@@ -1,9 +1,9 @@
 # Laravel Breadcrumbs
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/atstudio-tech/breadcrumbs.svg?style=flat-square)](https://packagist.org/packages/atstudio-tech/breadcrumbs)
-[![Total Downloads](https://img.shields.io/packagist/dt/atstudio-tech/breadcrumbs.svg?style=flat-square)](https://packagist.org/packages/atstudio-tech/breadcrumbs)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/vixen/laravel-breadcrumbs.svg?style=flat-square)](https://packagist.org/packages/vixen/laravel-breadcrumbs)
+[![Total Downloads](https://img.shields.io/packagist/dt/vixen/laravel-breadcrumbs.svg?style=flat-square)](https://packagist.org/packages/vixen/laravel-breadcrumbs)
 
-A complete rework of an older Laravel's package that lets build breadcrumbs with quickly and easy.
+Laravel package that allows simple creation of breadcrumbs. Works perfectly with Blade and Inertia.js.
 
 ```php
 public function show(Post $post) {
@@ -19,19 +19,25 @@ public function show(Post $post) {
 <main>Main Content</main>
 ```
 
+```tsx
+export function HomePage({ breadcrumbs }: { breadcrumbs: Breadcrumbs }) {
+    return (<div><Breadcrumbs breadcrumbs={breadcrumbs} /></div>)
+}
+```
+
 ## Installation
 
 You can install the package by running this command in your console:
 
 ```shell
-composer require atstudio-tech/breadcrumbs
+composer require vixen/laravel-breadcrumbs
 ```
 
-The Service Provider will be automatically discovered so there is no need to add it manually to your `/config/app.php` file.
+The Service Provider will be automatically discovered.
 
 ### Vendor Files
 
-You can publish both the configuration and views files with these commands:
+You can publish both the configuration and view files with these commands:
 
 ```shell
 php artisan vendor:publish --tag="breadcrumbs-config"
@@ -49,7 +55,7 @@ There are two different places to populate a breadcrumbs list:
 ### Routes File
 
 ```php
-use ATStudio\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
 
 Route::get('posts', [PostController::class, 'index'])->crumbs(function (Breadcrumbs $crumbs) {
     $crumbs->add('Posts', '/posts'); // Here we are using a hard-coded URL
@@ -77,7 +83,7 @@ There are are also three different ways of building a breadcrumbs list:
 #### Breadcrumbs Class
 
 ```php
-use ATStudio\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
 
 public function show(Post $post, Breadcrumbs $crumbs) {
     $crumbs->add('Show Post #3', 'posts.show', [3]);
@@ -87,7 +93,7 @@ public function show(Post $post, Breadcrumbs $crumbs) {
 or
 
 ```php
-use ATStudio\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
 
 public function show(Post $post) {
     Breadcrumbs::instance()->add('Show Post #3', 'posts.show', [3]);
@@ -97,7 +103,7 @@ public function show(Post $post) {
 #### Crumbs Façade
 
 ```php
-use ATStudio\Breadcrumbs\Facades\Crumbs;
+use Vixen\Breadcrumbs\Facades\Crumbs;
 
 public function show(Post $post) {
     Crumbs::add('Show Post #3', 'posts.show', [3]);
@@ -198,7 +204,7 @@ If you call this helper function without any parameter, it will simply return an
 Exclusively to this function, the `$title` parameter also accepts a closure (the same goes for the `Route::crumbs()` macro as shown in the example above):
 
 ```php
-use ATStudio\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
 
 public function show(Post $post) {
     crumbs(function (Breadcrumbs $crumbs) {

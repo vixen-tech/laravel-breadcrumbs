@@ -1,8 +1,8 @@
 <?php
 
-namespace ATStudio\Breadcrumbs\Facades;
+namespace Vixen\Breadcrumbs\Facades;
 
-use ATStudio\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
 
 /**
  * @method static Breadcrumbs add(string|array $title, ?string $path = null, mixed $params = null)

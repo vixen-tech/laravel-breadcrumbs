@@ -1,6 +1,6 @@
 <?php
 
-namespace ATStudio\Breadcrumbs\Exceptions;
+namespace Vixen\Breadcrumbs\Exceptions;
 
 class InvalidBreadcrumbOptions extends \Exception
 {

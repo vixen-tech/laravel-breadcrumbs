@@ -1,10 +1,10 @@
 <?php
 
-namespace ATStudio\Breadcrumbs\Tests;
+namespace Vixen\Breadcrumbs\Tests;
 
-use ATStudio\Breadcrumbs\Breadcrumbs;
-use ATStudio\Breadcrumbs\Exceptions\InvalidBreadcrumbOptions;
-use ATStudio\Breadcrumbs\Facades\Crumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Exceptions\InvalidBreadcrumbOptions;
+use Vixen\Breadcrumbs\Facades\Crumbs;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;

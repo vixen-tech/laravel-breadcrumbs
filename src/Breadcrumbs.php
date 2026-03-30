@@ -1,6 +1,6 @@
 <?php
 
-namespace ATStudio\Breadcrumbs;
+namespace Vixen\Breadcrumbs;
 
 use ArrayAccess;
 use Countable;

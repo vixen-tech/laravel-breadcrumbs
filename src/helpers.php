@@ -1,6 +1,6 @@
 <?php
 
-use ATStudio\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Breadcrumbs;
 
 if (!function_exists('crumbs')) {
     /**

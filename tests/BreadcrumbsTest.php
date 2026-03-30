@@ -1,10 +1,10 @@
 <?php
 
-namespace ATStudio\Breadcrumbs\Tests;
+namespace Vixen\Breadcrumbs\Tests;
 
-use ATStudio\Breadcrumbs\Breadcrumb;
-use ATStudio\Breadcrumbs\Breadcrumbs;
-use ATStudio\Breadcrumbs\Facades\Crumbs;
+use Vixen\Breadcrumbs\Breadcrumb;
+use Vixen\Breadcrumbs\Breadcrumbs;
+use Vixen\Breadcrumbs\Facades\Crumbs;
 use PHPUnit\Framework\Attributes\Test;
 
 class BreadcrumbsTest extends TestCase

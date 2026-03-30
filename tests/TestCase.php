@@ -1,8 +1,8 @@
 <?php
 
-namespace ATStudio\Breadcrumbs\Tests;
+namespace Vixen\Breadcrumbs\Tests;
 
-use ATStudio\Breadcrumbs\BreadcrumbsServiceProvider;
+use Vixen\Breadcrumbs\BreadcrumbsServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

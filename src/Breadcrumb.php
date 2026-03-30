@@ -1,8 +1,8 @@
 <?php
 
-namespace ATStudio\Breadcrumbs;
+namespace Vixen\Breadcrumbs;
 
-use ATStudio\Breadcrumbs\Exceptions\InvalidBreadcrumbOptions;
+use Vixen\Breadcrumbs\Exceptions\InvalidBreadcrumbOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;

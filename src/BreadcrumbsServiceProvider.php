@@ -1,8 +1,8 @@
 <?php
 
-namespace ATStudio\Breadcrumbs;
+namespace Vixen\Breadcrumbs;
 
-use ATStudio\Breadcrumbs\Facades\Crumbs;
+use Vixen\Breadcrumbs\Facades\Crumbs;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
