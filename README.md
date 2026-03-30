@@ -190,7 +190,7 @@ A breadcrumb requires a title.
 
 `$extra` is an associative array for any additional data you want to attach to the breadcrumb.
 
-`$title` accepts both a string and an array. If it's an array, it must contain these keys:
+`$title` accepts a string or an array. If it's an associative array, it represents a single breadcrumb:
 ```php
 [
     'title' => '',
@@ -198,6 +198,33 @@ A breadcrumb requires a title.
     'extra' => [], // optional
 ]
 ```
+
+If it's a sequential array, each element is treated as a separate breadcrumb grouped at a single position. This is useful for rendering a dropdown selector instead of a single link:
+```php
+Crumbs::add([
+    ['title' => 'Electronics', 'path' => '/categories/electronics'],
+    ['title' => 'Clothing', 'path' => '/categories/clothing'],
+    ['title' => 'Books', 'path' => '/categories/books'],
+]);
+```
+
+For example, an e-commerce site might show a category selector in the breadcrumb trail:
+
+```
+Home > [Electronics | Clothing | Books] > Product Name
+```
+
+```php
+crumbs('Home', '/')
+    ->add([
+        ['title' => 'Electronics', 'path' => '/categories/electronics'],
+        ['title' => 'Clothing', 'path' => '/categories/clothing'],
+        ['title' => 'Books', 'path' => '/categories/books'],
+    ])
+    ->add($product->name, route('products.show', $product));
+```
+
+When iterating, a multi-item position will be an array of `Breadcrumb` objects instead of a single `Breadcrumb`. Each item independently tracks its own `active` state.
 
 ### `crumbs(string|array|callable|null $title = null, ?string $path = null, array $extra = [])`
 

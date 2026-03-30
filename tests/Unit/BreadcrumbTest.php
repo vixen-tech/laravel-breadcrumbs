@@ -76,4 +76,16 @@ describe('Active page detection', function () {
         expect(crumbs()[0]->active)->toBeFalse()
             ->and(crumbs()[1]->active)->toBeTrue();
     });
+
+    it('detects active state within a multi-item position', function () {
+        URL::shouldReceive('current')->andReturn('/section-b');
+
+        Crumbs::add([
+            ['title' => 'Section A', 'path' => '/section-a'],
+            ['title' => 'Section B', 'path' => '/section-b'],
+        ]);
+
+        expect(crumbs()[0][0]->active)->toBeFalse()
+            ->and(crumbs()[0][1]->active)->toBeTrue();
+    });
 });

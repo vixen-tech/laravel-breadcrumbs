@@ -17,7 +17,7 @@ class Breadcrumbs implements Arrayable, ArrayAccess, Countable, IteratorAggregat
     /**
      * A list of breadcrumb items.
      *
-     * @var Collection<int, Breadcrumb>
+     * @var Collection<int, Breadcrumb | Breadcrumb[]>
      */
     protected Collection $crumbs;
 
@@ -41,10 +41,20 @@ class Breadcrumbs implements Arrayable, ArrayAccess, Countable, IteratorAggregat
 
     /**
      * @throws InvalidBreadcrumbOptions
-*/
+     */
     public function add(string|array $title, ?string $path = null, array $extra = []): static
     {
-        $this->crumbs[] = new Breadcrumb($title, $path, $extra);
+        if (is_array($title) && array_is_list($title)) {
+            $items = [];
+
+            foreach ($title as $item) {
+                $items[] = new Breadcrumb($item);
+            }
+
+            $this->crumbs[] = $items;
+        } else {
+            $this->crumbs[] = new Breadcrumb($title, $path, $extra);
+        }
 
         return $this;
     }

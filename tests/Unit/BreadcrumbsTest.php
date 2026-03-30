@@ -10,7 +10,7 @@ it('returns a class singleton', function () {
         ->and(crumbs())->toBe(Breadcrumbs::instance());
 });
 
-describe('data formats', function () {
+describe('Data formats', function () {
     it('can be converted into json format', function () {
         crumbs('First', '#first')->add('Second', '#second');
 
@@ -26,7 +26,7 @@ describe('data formats', function () {
     });
 });
 
-describe('collection behavior', function () {
+describe('Collection behavior', function () {
     it('returns a breadcrumb by key', function () {
         crumbs('First', '#first')
             ->add('Second', '#second')
@@ -86,5 +86,26 @@ describe('collection behavior', function () {
         }
 
         expect($i)->toBe(3);
+    });
+
+    it('accepts title, path and extra data as an array', function () {
+        crumbs([
+            'title' => 'First',
+            'path' => '/first',
+        ]);
+
+        expect(crumbs()[0]->title)->toBe('First');
+    });
+
+    it('accepts an array of items at a single position', function () {
+        crumbs([
+            ['title' => 'Section 1.1', 'path' => '/section-1-1'],
+            ['title' => 'Section 1.2', 'path' => '/section-1-2'],
+        ])
+            ->add('Section 2', '#section-2');
+
+        expect(crumbs()[0][0]->title)->toBe('Section 1.1')
+            ->and(crumbs()[0][1]->title)->toBe('Section 1.2')
+            ->and(crumbs()[1]->title)->toBe('Section 2');
     });
 });

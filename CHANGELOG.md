@@ -6,7 +6,9 @@ All changes to the `laravel-breadcrumbs` package will be documented in this file
 - Added support for Laravel 13
 - Simplified `$path` — it is now a plain string; route name resolution and `$params` have been removed
 - Added `$extra` parameter to `Breadcrumb` for attaching arbitrary data
+- Added multi-item positions — pass an array of items to `add()` to group multiple breadcrumbs at a single position (useful for dropdown selectors)
 - Breadcrumbs without a `$path` now have `null` path and `active = false` (previously used the current URL)
+- Changed `crumbs()` helper to accept `callable` instead of `\Closure`
 
 ## 3.0.3 • 2025-05-31
 - Added support for Laravel 12
