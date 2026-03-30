@@ -15,7 +15,7 @@ describe('data formats', function () {
         crumbs('First', '#first')->add('Second', '#second');
 
         expect(Crumbs::toJson())->toBeString()
-            ->and(Crumbs::toJson())->toBe('[{"title":"First","path":"#first","active":false},{"title":"Second","path":"#second","active":false}]');
+            ->and(Crumbs::toJson())->toBe('[{"title":"First","path":"#first","active":false,"extra":[]},{"title":"Second","path":"#second","active":false,"extra":[]}]');
     });
 
     it('is arrayable', function () {

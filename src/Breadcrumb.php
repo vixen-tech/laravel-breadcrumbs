@@ -22,14 +22,24 @@ class Breadcrumb
      */
     public readonly bool $active;
 
+    /**
+     * Extra data related to the breadcrumb.
+     */
+    public readonly array $extra;
+
+    /**
+     * @throws InvalidBreadcrumbOptions
+     */
     public function __construct(
         string|array $title,
         ?string $path = null,
+        array $extra = [],
     )
     {
         if (is_string($title)) {
             $this->title = $title;
             $this->path = $path;
+            $this->extra = $extra;
         } else {
             $this->parseOptions($title);
         }
@@ -38,8 +48,6 @@ class Breadcrumb
     }
 
     /**
-     * Convert breadcrumb options into a title and a URL.
-     *
      * @throws InvalidBreadcrumbOptions
      */
     protected function parseOptions(array $options): void
@@ -50,5 +58,6 @@ class Breadcrumb
 
         $this->title = $options['title'];
         $this->path = $options['path'] ?? null;
+        $this->extra = $options['extra'] ?? [];
     }
 }

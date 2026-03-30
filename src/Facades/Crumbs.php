@@ -5,7 +5,7 @@ namespace Vixen\Breadcrumbs\Facades;
 use Vixen\Breadcrumbs\Breadcrumbs;
 
 /**
- * @method static Breadcrumbs add(string|array $title, ?string $path = null)
+ * @method static Breadcrumbs add(string|array $title, ?string $path = null, array $extra = [])
  * @method static \Illuminate\Support\Collection all()
  * @method static \Illuminate\Contracts\View\View render(?string $view = null)
  * @method static string toJson()

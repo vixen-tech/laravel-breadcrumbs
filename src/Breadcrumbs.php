@@ -10,11 +10,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use IteratorAggregate;
 use Traversable;
+use Vixen\Breadcrumbs\Exceptions\InvalidBreadcrumbOptions;
 
 class Breadcrumbs implements Arrayable, ArrayAccess, Countable, IteratorAggregate, Jsonable
 {
     /**
-     * A list of breadcrumbs' items.
+     * A list of breadcrumb items.
      *
      * @var Collection<int, Breadcrumb>
      */
@@ -25,17 +26,12 @@ class Breadcrumbs implements Arrayable, ArrayAccess, Countable, IteratorAggregat
         $this->crumbs = collect();
     }
 
-    /**
-     * Get current instance of the class.
-     */
     public static function instance(): static
     {
         return app(static::class);
     }
 
     /**
-     * Return all existing breadcrumbs.
-     *
      * @return Collection<int, Breadcrumb>
      */
     public function all(): Collection
@@ -44,26 +40,20 @@ class Breadcrumbs implements Arrayable, ArrayAccess, Countable, IteratorAggregat
     }
 
     /**
-     * Add a new breadcrumb item.
-     */
-    public function add(string|array $title, ?string $path = null): static
+     * @throws InvalidBreadcrumbOptions
+*/
+    public function add(string|array $title, ?string $path = null, array $extra = []): static
     {
-        $this->crumbs[] = new Breadcrumb($title, $path);
+        $this->crumbs[] = new Breadcrumb($title, $path, $extra);
 
         return $this;
     }
 
-    /**
-     * Render a breadcrumbs list.
-     */
     public function render(?string $view = null): View
     {
         return view($view ?: config('breadcrumbs.view'))->with('breadcrumbs', $this->all());
     }
 
-    /**
-     * Stringify the class instance.
-     */
     public function __toString(): string
     {
         return $this->render();

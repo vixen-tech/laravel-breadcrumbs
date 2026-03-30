@@ -182,21 +182,24 @@ A few things to note here:
 
 ## API
 
-### `Breadcrumbs::add(string|array $title, ?string $path = null)`
+### `Breadcrumbs::add(string|array $title, ?string $path = null, array $extra = [])`
 
 A breadcrumb requires a title.
 
 `$path` is a plain string URL. If not provided, the breadcrumb will have no URL.
+
+`$extra` is an associative array for any additional data you want to attach to the breadcrumb.
 
 `$title` accepts both a string and an array. If it's an array, it must contain these keys:
 ```php
 [
     'title' => '',
     'path' => '', // optional
+    'extra' => [], // optional
 ]
 ```
 
-### `crumbs(string|array|callable|null $title = null, ?string $path = null)`
+### `crumbs(string|array|callable|null $title = null, ?string $path = null, array $extra = [])`
 
 If you call this helper function without any parameter, it will simply return an instance of `Breadcrumbs` as mentioned above. Otherwise it accepts the same parameters as `Breadcrumbs::add()`.
 
@@ -215,7 +218,7 @@ public function show(Post $post) {
 
 ### Breadcrumb Item
 
-A single breadcrumb item has `title`, `path` and `active` properties. 
+A single breadcrumb item has `title`, `path`, `active` and `extra` properties.
 
 ## Changelog
 
